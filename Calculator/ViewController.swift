@@ -11,7 +11,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var resultTextViewOutlet: UILabel!
+
+    @IBOutlet weak var resultTextViewOutlet: UITextView!
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
@@ -34,6 +35,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var leftParenthesis: UIButton!
     @IBOutlet weak var rightParenthesis: UIButton!
     @IBOutlet weak var dot: UIButton!
+    @IBOutlet weak var cosine: UIButton!
+    @IBOutlet weak var sine: UIButton!
+
     
     var entryString:String = ""
     let prefs = NSUserDefaults.standardUserDefaults()
@@ -46,7 +50,7 @@ class ViewController: UIViewController {
     var tempResult = 0.0
     var firstIndex = 0
     var lastIndex = 0
-    var dummy = true
+    var skip = true
     var entryStringWithoutLast = ""
     var entryStringWithoutLastTwo = ""
     var entryStringWithoutLastThree = ""
@@ -54,6 +58,7 @@ class ViewController: UIViewController {
     var entryStringWithoutLastFive = ""
     var entryStringWithoutLastSix = ""
     var entryCount = 0
+    var subArray:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,33 +72,47 @@ class ViewController: UIViewController {
         
         tempArray = entryString.componentsSeparatedByString(" ")
         
-        convertToDoubles()
-        
-        checkForParenthesis()
-        
-        tempResult = priorityCalculation(tempArray)
-        
-        resultTextViewOutlet.text = String(tempResult)
-        entryString = String(tempResult)
-        num1 = tempResult
+        do{
+            try convertToDoubles()
+            try checkForParenthesis()
+            tempResult = try priorityCalculation(tempArray)
+            resultTextViewOutlet.text = String(tempResult)
+            entryString = String(tempResult)
+            num1 = tempResult
+            
+        }catch Error.InvalidParenthesis{
+            entryString = ""
+            tempArray = [""]
+            tempResult = 0.0
+            resultTextViewOutlet.text = "Parenthesis Error"
+            
+        }catch Error.InvalidInput{
+            entryString = ""
+            tempArray = [""]
+            tempResult = 0.0
+            resultTextViewOutlet.text = "Input Error"
+            
+        }catch{
+            print("Other error")
+        }
     }
     
-    func checkForParenthesis(){
+    func checkForParenthesis() throws{
         
         for element in tempArray{
             if element.containsString("("){
-                parenthesisHandling()
+               try parenthesisHandling()
                 break
             }
         }
     }
     
-    func parenthesisHandling() -> [String]{
+    func parenthesisHandling() throws -> [String]{
         
-        var subArray:[String] = []
         
-        subArray = decompose(tempArray)
+           try decompose(tempArray)
         
+
         let checkParenthesis = subArray[0].componentsSeparatedByString("(")
         let checkParenthesisEnd = subArray.last?.componentsSeparatedByString(")")
         
@@ -115,7 +134,7 @@ class ViewController: UIViewController {
             subArray.insert(element, atIndex: subArray.count)
             tempArray.removeRange(firstIndex...lastIndex)
             tempArray.insert(subArray.first!, atIndex: firstIndex)
-            parenthesisHandling()
+            try parenthesisHandling()
         }
         
         if checkParenthesis.count >= 3{
@@ -138,12 +157,12 @@ class ViewController: UIViewController {
             subArray.insert(element, atIndex: Int(0))
             tempArray.removeRange(firstIndex...lastIndex)
             tempArray.insert(subArray.first!, atIndex: firstIndex)
-            parenthesisHandling()
+            try parenthesisHandling()
         }
-        if dummy == true{
+        if skip == true{
             updateTempArray(firstIndex, lastI: lastIndex, array: subArray)
-            checkForParenthesis()
-            dummy = false
+            try checkForParenthesis()
+            skip = false
         }
         return tempArray
     }
@@ -154,9 +173,9 @@ class ViewController: UIViewController {
         tempArray.insert(String(calculateInParenthesis(array)), atIndex: firstIndex)
     }
     
-    func decompose(array:[String]) -> [String]{
+    func decompose(array:[String]) throws-> [String]{
         
-        var subArray:[String] = []
+        
         
         for element in array{
             if element.containsString("("){
@@ -168,14 +187,32 @@ class ViewController: UIViewController {
                 break
             }
         }
-        for x in firstIndex ..< (lastIndex+1){
-            let temp = array[x]
-            subArray.append(temp)
-        }
+        
+        try composeSubParenthesis(array)
+        
+        
         return subArray
     }
     
-    
+    func composeSubParenthesis(array:[String]) throws -> [String]{
+        
+        subArray.removeAll()
+        
+        
+        for x in firstIndex ..< (lastIndex+1){
+            if lastIndex >= array.count{
+               throw Error.InvalidParenthesis
+            }
+            
+            let temp = array[x]
+            subArray.append(temp)
+            
+           
+        }
+        
+        return subArray
+    }
+        
     func calculateInParenthesis(subArrayPassed:[String]) -> Double{
         
         var subArray = subArrayPassed
@@ -188,37 +225,74 @@ class ViewController: UIViewController {
         subArray.removeLast()
         subArray.insert(y1!, atIndex: subArray.count)
         
-        return priorityCalculation(subArray)
+        do{
+            return try priorityCalculation(subArray)
+        }catch{
+            return 0.0
+        }
     }
     
-    func convertToDoubles() -> [String]{
+    func convertToDoubles() throws -> [String]{
         
         for element in tempArray{
             let y = tempArray.indexOf(element)
             
             if element.containsString("^"){
                 var array2 = element.componentsSeparatedByString("^")
-                    for x in 0 ..< array2.count{
-                        let y = Double(array2[x])!
-                        array2[x] = String(y)
-                    }
+                for x in 0 ..< array2.count{
+                    let y = try stringToDouble(array2[x])
+                    array2[x] = String(y)
+                }
                 tempArray.removeAtIndex(y!)
                 tempArray.insert(array2[0] + "^" + array2[1], atIndex: y!)
             }
             if element.containsString("√"){
                 var array2 = element.componentsSeparatedByString("√")
                 for x in 1 ..< array2.count{
-                    let y = Double(array2[x])!
+                    let y = try stringToDouble(array2[x])
                     array2[x] = String(y)
                 }
                 tempArray.removeAtIndex(y!)
                 tempArray.insert(array2[0] + "√" + array2[1], atIndex: y!)
             }
+            if element.containsString("cos"){
+                var array2 = element.componentsSeparatedByString("cos")
+                for x in 1..<array2.count{
+                    let y = try stringToDouble(array2[x])
+                    array2[x] = String(y)
+                }
+                tempArray.removeAtIndex(y!)
+                tempArray.insert(array2[0] + "cos" + array2[1], atIndex: y!)
+            }
+            
+            if element.containsString("sin"){
+                var array2 = element.componentsSeparatedByString("sin")
+                for x in 1..<array2.count{
+                    let y = try stringToDouble(array2[x])
+                    array2[x] = String(y)
+                }
+                tempArray.removeAtIndex(y!)
+                tempArray.insert(array2[0] + "sin" + array2[1], atIndex: y!)
+            }
         }
         return tempArray
     }
     
-    func priorityCalculation(x:[String]) -> Double {
+    func stringToDouble(string:String) throws -> Double{
+        
+        if let num1 = Double(string){
+            return num1
+        }else{
+            throw Error.InvalidInput
+        }
+    }
+    
+    enum Error: ErrorType {
+        case InvalidInput
+        case InvalidParenthesis
+    }
+    
+    func priorityCalculation(x:[String]) throws -> Double {
         
         var tempValue:Double = 0.0
         var array:[String] = []
@@ -233,18 +307,18 @@ class ViewController: UIViewController {
                 let array2 = element.componentsSeparatedByString("√")
                 
                 if num1.isZero{
-                    num1 = Double(array2.last!)!
+                    try num1 = stringToDouble(array2.last!)
                     root = sqrt(num1)
-                    let tempString = "√" + String(Double(num1))
+                    let tempString = "√" + String(num1)
                     let y = array.indexOf(tempString)
                     array.removeAtIndex(y!)
                     array.insert(String(root), atIndex: y!)
                     num1 = root
                     
                 }else{
-                    num2 = Double(array2.last!)!
+                    try num2 = stringToDouble(array2.last!)
                     root = sqrt(num2)
-                    let tempString = "√" + String(Double(num2))
+                    let tempString = "√" + String(num2)
                     let y = array.indexOf(tempString)
                     array.removeAtIndex(y!)
                     array.insert(String(root), atIndex: y!)
@@ -256,14 +330,41 @@ class ViewController: UIViewController {
                 
                 let array2 = element.componentsSeparatedByString("^")
                 
-                let exp = Double(array2.last!)!
-                let base = Double(array2.first!)!
+                let exp = try stringToDouble(array2.last!)
+                let base = try stringToDouble(array2.first!)
                 
                 num1 = pow(base, exp)
-                let tempString = String(Double(base)) + "^" + String(Double(exp))
+                let tempString = String(base) + "^" + String(exp)
                 let y = array.indexOf(tempString)
                 array.removeAtIndex(y!)
                 array.insert(String(num1), atIndex: y!)
+            }
+        }
+        
+        for element in array{
+            
+                if element.containsString("cos"){
+            
+                    let array2 = element.componentsSeparatedByString("cos")
+                    let num1 = try stringToDouble(array2.last!)
+                    let cosResult = cos(num1 * M_PI / 180)
+                    let tempString = "cos" + String(num1)
+                    let y = array.indexOf(tempString)
+                    array.removeAtIndex(y!)
+                    array.insert(String(cosResult), atIndex: y!)
+                
+                }
+            
+            if element.containsString("sin"){
+                
+                let array2 = element.componentsSeparatedByString("sin")
+                let num1 = try stringToDouble(array2.last!)
+                let cosResult = sin(num1 * M_PI / 180)
+                let tempString = "sin" + String(num1)
+                let y = array.indexOf(tempString)
+                array.removeAtIndex(y!)
+                array.insert(String(cosResult), atIndex: y!)
+                
             }
         }
         
@@ -273,8 +374,8 @@ class ViewController: UIViewController {
                 if element == "x"{
                     
                     let x = array.indexOf("x")
-                    num1 = Double(array[(x!-1)])!
-                    num2 = Double(array[(x!+1)])!
+                    num1 = try stringToDouble(array[(x!-1)])
+                    num2 = try stringToDouble(array[(x!+1)])
                     array.removeAtIndex(Int(x!+1))
                     array.removeAtIndex(Int(x!))
                     array.removeAtIndex(Int(x!-1))
@@ -282,8 +383,8 @@ class ViewController: UIViewController {
                 }
                 if element == "/"{
                     let x = array.indexOf("/")
-                    num1 = Double(array[(x!-1)])!
-                    num2 = Double(array[(x!+1)])!
+                    num1 = try stringToDouble(array[(x!-1)])
+                    num2 = try stringToDouble(array[(x!+1)])
                     array.removeAtIndex(Int(x!+1))
                     array.removeAtIndex(Int(x!))
                     array.removeAtIndex(Int(x!-1))
@@ -295,13 +396,13 @@ class ViewController: UIViewController {
             }
         }
         
-            if array.contains("+") || array.contains("-"){
+        if array.contains("+") || array.contains("-"){
             for element in array{
                 if element == "+"{
                     
                     let x = array.indexOf("+")
-                    num1 = Double(array[(x!-1)])!
-                    num2 = Double(array[(x!+1)])!
+                    try num1 = stringToDouble(array[(x!-1)])
+                    try num2 = stringToDouble(array[(x!+1)])
                     array.removeAtIndex(Int(x!+1))
                     array.removeAtIndex(Int(x!))
                     array.removeAtIndex(Int(x!-1))
@@ -311,8 +412,8 @@ class ViewController: UIViewController {
                 if element == "-"{
                     
                     let x = array.indexOf("-")
-                    num1 = Double(array[(x!-1)])!
-                    num2 = Double(array[(x!+1)])!
+                    try num1 = stringToDouble(array[(x!-1)])
+                    try num2 = stringToDouble(array[(x!+1)])
                     array.removeAtIndex(Int(x!+1))
                     array.removeAtIndex(Int(x!))
                     array.removeAtIndex(Int(x!-1))
@@ -320,8 +421,7 @@ class ViewController: UIViewController {
                 }
             }
         }
-        
-        tempValue = Double(array[0])!
+        tempValue = try stringToDouble(array[0])
         return tempValue
     }
     
@@ -369,7 +469,12 @@ class ViewController: UIViewController {
             value = ")"
         }else if sender == dot{
             value = "."
+        }else if sender == cosine{
+            value = "cos"
+        }else if sender == sine{
+            value = "sin"
         }
+        
         entryStringWithoutLastSix = entryStringWithoutLastFive
         entryStringWithoutLastFive = entryStringWithoutLastFour
         entryStringWithoutLastFour = entryStringWithoutLastThree
@@ -400,7 +505,7 @@ class ViewController: UIViewController {
     
     @IBAction func deleteButton(sender: UIButton) {
         if entryCount == 0{
-          entryString = entryStringWithoutLast
+            entryString = entryStringWithoutLast
         }
         if entryCount == 1{
             entryString = entryStringWithoutLastTwo
