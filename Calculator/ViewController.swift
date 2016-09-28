@@ -11,7 +11,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-
+    
     @IBOutlet weak var resultTextViewOutlet: UITextView!
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
@@ -37,19 +37,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var dot: UIButton!
     @IBOutlet weak var cosine: UIButton!
     @IBOutlet weak var sine: UIButton!
-
+    @IBOutlet weak var variableX: UIButton!
     
-    private var entryString:String = ""
-    private var count = false
-    private let n:Double = 0.0
-    private var entryStringWithoutLast = ""
-    private var entryStringWithoutLastTwo = ""
-    private var entryStringWithoutLastThree = ""
-    private var entryStringWithoutLastFour = ""
-    private var entryStringWithoutLastFive = ""
-    private var entryStringWithoutLastSix = ""
-    private var entryCount = 0
-    private var calculatorModel = CalculatorModel()
+    
+    
+    fileprivate var entryString:String = ""
+    fileprivate var count = false
+    fileprivate let n:Double = 0.0
+    fileprivate var entryStringWithoutLast = ""
+    fileprivate var entryStringWithoutLastTwo = ""
+    fileprivate var entryStringWithoutLastThree = ""
+    fileprivate var entryStringWithoutLastFour = ""
+    fileprivate var entryStringWithoutLastFive = ""
+    fileprivate var entryStringWithoutLastSix = ""
+    fileprivate var entryCount = 0
+    fileprivate var calculatorModel = CalculatorModel()
     
     
     override func viewDidLoad() {
@@ -60,22 +62,22 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func result(sender: UIButton) {
+    @IBAction func result(_ sender: UIButton) {
         
-        calculatorModel.setTempArray(entryString.componentsSeparatedByString(" "))
+        calculatorModel.setTempArray(entryString.components(separatedBy: " "))
         
         do{
-            try calculatorModel.convertToDoubles()
+            _ = try calculatorModel.convertToDoubles()
             try calculatorModel.checkForParenthesis()
             try calculatorModel.calculateTempResult()
             resultTextViewOutlet.text = String(calculatorModel.getTempResult())
             entryString = String(calculatorModel.getTempResult())
-                        
-        }catch CalculatorModel.Error.InvalidParenthesis{
+            
+        }catch CalculatorModel.error.invalidParenthesis{
             reset()
             resultTextViewOutlet.text = "Parenthesis Error"
             
-        }catch CalculatorModel.Error.InvalidInput{
+        }catch CalculatorModel.error.invalidInput{
             reset()
             resultTextViewOutlet.text = "Input Error"
             
@@ -84,7 +86,7 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func keysButton(sender: UIButton) {
+    @IBAction func keysButton(_ sender: UIButton) {
         
         var value:String = ""
         
@@ -113,7 +115,7 @@ class ViewController: UIViewController {
         }else if sender == minus{
             value = " - "
         }else if sender == times{
-            value = " x "
+            value = " * "
         }else if sender == divide{
             value = " / "
         }else if sender == root{
@@ -132,6 +134,8 @@ class ViewController: UIViewController {
             value = "cos"
         }else if sender == sine{
             value = "sin"
+        }else if sender == variableX{
+            value = "x"
         }
         
         entryStringWithoutLastSix = entryStringWithoutLastFive
@@ -141,11 +145,11 @@ class ViewController: UIViewController {
         entryStringWithoutLastTwo = entryStringWithoutLast
         entryStringWithoutLast = entryString
         
-        entryString.appendContentsOf(value)
+        entryString.append(value)
         resultTextViewOutlet.text = entryString
     }
     
-    @IBAction func saveButton(sender: UIButton) {
+    @IBAction func saveButton(_ sender: UIButton) {
         
         if count == false{
             savedValue1.text = String(entryString)
@@ -156,12 +160,12 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func clearButton(sender: UIButton) {
+    @IBAction func clearButton(_ sender: UIButton) {
         reset()
         resultTextViewOutlet.text = "0"
     }
     
-    @IBAction func deleteButton(sender: UIButton) {
+    @IBAction func deleteButton(_ sender: UIButton) {
         if entryCount == 0{
             entryString = entryStringWithoutLast
         }
@@ -188,5 +192,14 @@ class ViewController: UIViewController {
         entryString = ""
         calculatorModel.setTempResult(0.0)
         calculatorModel.setTempArray([""])
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "Show Graph"){
+            
+            let gvc:GraphViewController = segue.destination as! GraphViewController
+            gvc.setUpGraph(entryString)
+            
+        }
     }
 }

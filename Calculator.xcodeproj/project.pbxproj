@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		522C43F41D2F375B00442C69 /* CalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522C43F31D2F375B00442C69 /* CalculatorModel.swift */; };
+		529138A31D4018C70034534A /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529138A21D4018C70034534A /* GraphViewController.swift */; };
+		529138A71D406BE30034534A /* GraphViewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529138A61D406BE30034534A /* GraphViewWindow.swift */; };
+		529138A91D4071580034534A /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529138A81D4071580034534A /* GraphModel.swift */; };
 		52C125BA1D04D3B70051393F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C125B91D04D3B70051393F /* AppDelegate.swift */; };
 		52C125BC1D04D3B70051393F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C125BB1D04D3B70051393F /* ViewController.swift */; };
 		52C125BF1D04D3B70051393F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52C125BD1D04D3B70051393F /* Main.storyboard */; };
@@ -17,13 +20,16 @@
 
 /* Begin PBXFileReference section */
 		522C43F31D2F375B00442C69 /* CalculatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
+		529138A21D4018C70034534A /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewController.swift; path = Calculator/GraphViewController.swift; sourceTree = "<group>"; };
+		529138A61D406BE30034534A /* GraphViewWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewWindow.swift; sourceTree = "<group>"; };
+		529138A81D4071580034534A /* GraphModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
 		52C125B61D04D3B70051393F /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		52C125B91D04D3B70051393F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		52C125B91D04D3B70051393F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Calculator/AppDelegate.swift; sourceTree = "<group>"; };
 		52C125BB1D04D3B70051393F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		52C125BE1D04D3B70051393F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		52C125C01D04D3B70051393F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		52C125C01D04D3B70051393F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Calculator/Assets.xcassets; sourceTree = "<group>"; };
 		52C125C31D04D3B70051393F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		52C125C51D04D3B70051393F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52C125C51D04D3B70051393F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Calculator/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,11 +43,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		529138A51D4018DE0034534A /* Graph */ = {
+			isa = PBXGroup;
+			children = (
+				529138A21D4018C70034534A /* GraphViewController.swift */,
+				529138A81D4071580034534A /* GraphModel.swift */,
+				529138A61D406BE30034534A /* GraphViewWindow.swift */,
+			);
+			name = Graph;
+			sourceTree = "<group>";
+		};
 		52C125AD1D04D3B70051393F = {
 			isa = PBXGroup;
 			children = (
+				529138A51D4018DE0034534A /* Graph */,
 				52C125B81D04D3B70051393F /* Calculator */,
 				52C125B71D04D3B70051393F /* Products */,
+				52C125BD1D04D3B70051393F /* Main.storyboard */,
+				52C125C01D04D3B70051393F /* Assets.xcassets */,
+				52C125C51D04D3B70051393F /* Info.plist */,
+				52C125C21D04D3B70051393F /* LaunchScreen.storyboard */,
+				52C125B91D04D3B70051393F /* AppDelegate.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,13 +78,8 @@
 		52C125B81D04D3B70051393F /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
-				52C125B91D04D3B70051393F /* AppDelegate.swift */,
 				52C125BB1D04D3B70051393F /* ViewController.swift */,
-				52C125BD1D04D3B70051393F /* Main.storyboard */,
 				522C43F31D2F375B00442C69 /* CalculatorModel.swift */,
-				52C125C01D04D3B70051393F /* Assets.xcassets */,
-				52C125C21D04D3B70051393F /* LaunchScreen.storyboard */,
-				52C125C51D04D3B70051393F /* Info.plist */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -94,12 +111,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Stefan Auvergne";
 				TargetAttributes = {
 					52C125B51D04D3B70051393F = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = JE9824DC59;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -139,7 +157,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				529138A71D406BE30034534A /* GraphViewWindow.swift in Sources */,
 				522C43F41D2F375B00442C69 /* CalculatorModel.swift in Sources */,
+				529138A91D4071580034534A /* GraphModel.swift in Sources */,
+				529138A31D4018C70034534A /* GraphViewController.swift in Sources */,
 				52C125BC1D04D3B70051393F /* ViewController.swift in Sources */,
 				52C125BA1D04D3B70051393F /* AppDelegate.swift in Sources */,
 			);
@@ -154,6 +175,7 @@
 				52C125BE1D04D3B70051393F /* Base */,
 			);
 			name = Main.storyboard;
+			path = Calculator;
 			sourceTree = "<group>";
 		};
 		52C125C21D04D3B70051393F /* LaunchScreen.storyboard */ = {
@@ -162,6 +184,7 @@
 				52C125C31D04D3B70051393F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			path = Calculator;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -181,8 +204,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -226,8 +251,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -246,6 +273,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -261,6 +289,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.stefan.auvergne.Calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -275,6 +304,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.stefan.auvergne.Calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
