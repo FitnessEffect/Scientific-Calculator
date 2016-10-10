@@ -43,9 +43,6 @@ class GraphViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func pinchRecognized(_ pinch: UIPinchGestureRecognizer) {
         
-    //    graphViewOutlet.transform = CGAffineTransformScale(self.graphViewOutlet.transform, pinch.scale, pinch.scale)
-        
-        
         graphViewOutlet.xMax = graphViewOutlet.xMax /  Double(pinch.scale)
         graphViewOutlet.xMin = graphViewOutlet.xMin /  Double(pinch.scale)
         
